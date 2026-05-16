@@ -15,6 +15,7 @@ import BusinessValidate from './pages/BusinessValidate';
 import AdminDropOffs from './pages/AdminDropOffs';
 import AdminUsers from './pages/AdminUsers';
 import AdminComplaints from './pages/AdminComplaints';
+import MyComplaints from './pages/MyComplaints';
 
 export default function App() {
   const { user, isGuest } = useAuth();
@@ -46,6 +47,7 @@ export default function App() {
         <Route path="/history" element={<ProtectedRoute roles={['MEMBER']}><History /></ProtectedRoute>} />
         <Route path="/rewards" element={<ProtectedRoute roles={['MEMBER']}><Rewards /></ProtectedRoute>} />
         <Route path="/redemptions" element={<ProtectedRoute roles={['MEMBER']}><Redemptions /></ProtectedRoute>} />
+        <Route path="/complaints" element={<ProtectedRoute roles={['MEMBER']}><MyComplaints /></ProtectedRoute>} />
 
         {/* Business sayfaları */}
         <Route path="/business/rewards" element={<ProtectedRoute roles={['BUSINESS']}><BusinessRewards /></ProtectedRoute>} />

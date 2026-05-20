@@ -16,6 +16,7 @@ export default function Navbar() {
         <NavLink to="/history">My Activity</NavLink>
         <NavLink to="/rewards">Rewards</NavLink>
         <NavLink to="/redemptions">My Redemptions</NavLink>
+        <NavLink to="/complaints">Complaints</NavLink>
       </>}
 
       {user && user.role === 'BUSINESS' && <>

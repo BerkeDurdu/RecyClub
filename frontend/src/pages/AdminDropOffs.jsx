@@ -37,6 +37,11 @@ export default function AdminDropOffs() {
     load();
   }
 
+  async function activate(id) {
+    await api.patch(`/drop-off-points/${id}`, { isActive: true });
+    load();
+  }
+
   return (
     <div className="container">
       <div className="card">
@@ -71,7 +76,9 @@ export default function AdminDropOffs() {
                 <td>{Number(p.longitude).toFixed(4)}</td>
                 <td>{(p.acceptedTypes || []).join(', ')}</td>
                 <td>{p.isActive ? 'Yes' : 'No'}</td>
-                <td>{p.isActive && <button className="danger" onClick={() => deactivate(p.id)}>Deactivate</button>}</td>
+                <td>{p.isActive
+                  ? <button className="danger" onClick={() => deactivate(p.id)}>Deactivate</button>
+                  : <button onClick={() => activate(p.id)}>Activate</button>}</td>
               </tr>
             ))}
           </tbody>

@@ -15,7 +15,9 @@ export default function Register() {
     setErr('');
     try {
       await register(form);
-      nav('/map');
+      const redirect = localStorage.getItem('rc_postLoginRedirect');
+      localStorage.removeItem('rc_postLoginRedirect');
+      nav(redirect || '/map');
     } catch (e) {
       setErr(e.response?.data?.error || 'Register failed');
     }

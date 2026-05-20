@@ -24,7 +24,7 @@ export default function DropOffMap() {
     <div className="container">
       <div className="card">
         <h2>♻ Drop-off Points</h2>
-        <p>OpenStreetMap + Leaflet.js — geri dönüşüm noktalarını harita üzerinde göster.</p>
+        <p>OpenStreetMap + Leaflet.js — recycling drop-off locations shown on the map.</p>
         <div style={{ height: 480, borderRadius: 8, overflow: 'hidden' }}>
           <MapContainer center={center} zoom={12} style={{ height: '100%', width: '100%' }}>
             <TileLayer

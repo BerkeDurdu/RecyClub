@@ -13,8 +13,10 @@ export default function Login() {
     e.preventDefault();
     setErr('');
     try {
-      await login(email, password);
-      nav('/map');
+      await login(email.trim().toLowerCase(), password);
+      const redirect = localStorage.getItem('rc_postLoginRedirect');
+      localStorage.removeItem('rc_postLoginRedirect');
+      nav(redirect || '/map');
     } catch (e) {
       setErr(e.response?.data?.error || 'Login failed');
     }
@@ -36,7 +38,7 @@ export default function Login() {
         <form onSubmit={submit}>
           <div style={{ marginBottom: 12 }}>
             <label>Email</label>
-            <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" required placeholder="you@example.com" />
+            <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" autoCapitalize="none" autoCorrect="off" spellCheck="false" inputMode="email" required placeholder="you@example.com" />
           </div>
           <div style={{ marginBottom: 12 }}>
             <label>Password</label>

@@ -22,7 +22,7 @@ export default function BusinessValidate() {
     <div className="container">
       <div className="card">
         <h2>Validate Redemption</h2>
-        <p>Müşterinin telefonundaki QR kodunu girin (veya tarayıcı tarayıcısı ile okutun).</p>
+        <p>Enter the QR code from the customer's phone (or scan it).</p>
         {err && <div className="error">{err}</div>}
         {result && (
           <div className="success">

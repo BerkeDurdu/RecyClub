@@ -30,6 +30,21 @@ a:hover { text-decoration: underline; }
   margin-right: 20px;
   letter-spacing: -0.3px;
 }
+.nav-links { display: flex; align-items: center; gap: 4px; flex: 1; }
+.nav-toggle {
+  display: none;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 8px;
+  font-size: 18px;
+  line-height: 1;
+  padding: 6px 12px;
+  cursor: pointer;
+  box-shadow: none;
+}
+.nav-toggle:hover { background: rgba(255,255,255,0.22); transform: none; }
+.pts-mobile { display: none; }
 .nav a {
   color: rgba(255,255,255,0.75);
   padding: 8px 14px;
@@ -243,5 +258,47 @@ th { background: #f9fafb; font-weight: 600; color: #374151; }
 
 /* ── QR ─────────────────────────────────────── */
 .qr-box { background: #f9fafb; padding: 14px; border-radius: 10px; text-align: center; border: 1px solid #e5e7eb; }
-.qr-box img { width: 180px; height: 180px; }
+.qr-box img { width: 180px; height: 180px; max-width: 100%; }
 .qr-box code { display: block; margin-top: 8px; font-size: 12px; word-break: break-all; color: #6b7280; }
+
+/* ── Mobile (≤ 760px) ───────────────────────── */
+@media (max-width: 760px) {
+  .nav { padding: 0 14px; gap: 8px; }
+  .nav .brand { margin-right: auto; }
+  .nav-toggle { display: block; }
+  .pts-mobile { display: inline-block; }
+
+  /* Collapse links into a dropdown panel below the bar */
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 56px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    padding: 8px 14px 14px;
+    background: linear-gradient(135deg, #14532d, #166534);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+    max-height: calc(100vh - 56px);
+    overflow-y: auto;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links a { padding: 12px 14px; font-size: 15px; border-radius: 8px; }
+  .nav-links .spacer { display: none; }
+  .pts-desktop { display: none; }
+  .nav-links .user-info { margin: 8px 0 4px; padding: 0 4px; }
+  .nav-links .btn-logout,
+  .nav-links .btn-login { width: 100%; margin: 4px 0 0; padding: 12px; }
+
+  .container { margin: 16px auto; padding: 0 12px; }
+  .card { padding: 16px; border-radius: 12px; }
+  .auth-page { padding: 24px 14px 40px; }
+
+  /* Wide tables scroll horizontally instead of overflowing the screen */
+  .card table { display: block; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+
+  /* Forms with inline flex layouts stack vertically */
+  form[style*="flex"] { flex-wrap: wrap; }
+}

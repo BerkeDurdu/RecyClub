@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../api/axios';
+import { useAuth } from '../context/AuthContext';
 
 const TYPES = [
   { v: 'GLASS', label: 'Glass (5 pts/kg)' },
@@ -9,6 +10,7 @@ const TYPES = [
 ];
 
 export default function LogRecycling() {
+  const { refresh } = useAuth();
   const [wasteType, setWasteType] = useState('PLASTIC');
   const [quantity, setQuantity] = useState(1);
   const [dropOffPointId, setDropOffPointId] = useState('');
@@ -38,6 +40,7 @@ export default function LogRecycling() {
   async function validateNow() {
     try {
       const r = await api.post('/waste-logs/validate', { qrCode: created.qrCode });
+      await refresh();
       alert(`Validated! +${created.pointsAwarded} points. New balance: ${r.data.points}`);
       setCreated(null);
     } catch (e) {
@@ -49,7 +52,7 @@ export default function LogRecycling() {
     <div className="container">
       <div className="card">
         <h2>Log Recycling Activity</h2>
-        <p>Atık tipi ve miktarı seçin; sistem QR üretir, drop-off noktasında doğrulayınca puan hesabınıza işlenir.</p>
+        <p>Select the waste type and quantity. The system generates a QR code; once it is validated at the drop-off point, the points are credited to your account.</p>
         {err && <div className="error">{err}</div>}
         <form onSubmit={submit} className="grid grid-3">
           <div>
@@ -78,7 +81,7 @@ export default function LogRecycling() {
       {created && (
         <div className="card">
           <h2>Your Drop-off QR</h2>
-          <p>Drop-off noktasına gidin. QR taranınca <strong>{created.pointsAwarded} pts</strong> kazanırsınız.</p>
+          <p>Go to the drop-off point and scan this QR. You will earn <strong>{created.pointsAwarded} pts</strong> once it is validated.</p>
           <div className="qr-box">
             <img src={created.qrImage} alt="QR" />
             <code>{created.qrCode}</code>

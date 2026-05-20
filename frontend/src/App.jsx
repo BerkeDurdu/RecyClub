@@ -16,12 +16,18 @@ import AdminDropOffs from './pages/AdminDropOffs';
 import AdminUsers from './pages/AdminUsers';
 import AdminComplaints from './pages/AdminComplaints';
 import MyComplaints from './pages/MyComplaints';
+import Scan from './pages/Scan';
 
 export default function App() {
   const { user, isGuest } = useAuth();
 
-  /* Giriş yapılmamış ve misafir değilse → Login/Register ekranı */
+  // Not logged in and not a guest -> show Login/Register screens
   if (!user && !isGuest) {
+    // Preserve a scanned QR deep link so we return to it after logging in
+    const { pathname, search } = window.location;
+    if (pathname.startsWith('/scan')) {
+      localStorage.setItem('rc_postLoginRedirect', pathname + search);
+    }
     return (
       <Routes>
         <Route path="/login" element={<Login />} />
@@ -35,25 +41,28 @@ export default function App() {
     <>
       <Navbar />
       <Routes>
-        {/* Herkes (guest dahil) haritayı görebilir */}
+        {/* Public map (guests included) */}
         <Route path="/map" element={<DropOffMap />} />
 
-        {/* Auth sayfaları - giriş yapmışsa map'e yönlendir */}
+        {/* QR scan landing — completes validation for the logged-in user */}
+        <Route path="/scan" element={<Scan />} />
+
+        {/* Auth pages — redirect to map when already logged in */}
         <Route path="/login" element={<Navigate to="/map" replace />} />
         <Route path="/register" element={<Navigate to="/map" replace />} />
 
-        {/* Member sayfaları */}
+        {/* Member pages */}
         <Route path="/log" element={<ProtectedRoute roles={['MEMBER']}><LogRecycling /></ProtectedRoute>} />
         <Route path="/history" element={<ProtectedRoute roles={['MEMBER']}><History /></ProtectedRoute>} />
         <Route path="/rewards" element={<ProtectedRoute roles={['MEMBER']}><Rewards /></ProtectedRoute>} />
         <Route path="/redemptions" element={<ProtectedRoute roles={['MEMBER']}><Redemptions /></ProtectedRoute>} />
         <Route path="/complaints" element={<ProtectedRoute roles={['MEMBER']}><MyComplaints /></ProtectedRoute>} />
 
-        {/* Business sayfaları */}
+        {/* Business pages */}
         <Route path="/business/rewards" element={<ProtectedRoute roles={['BUSINESS']}><BusinessRewards /></ProtectedRoute>} />
         <Route path="/business/validate" element={<ProtectedRoute roles={['BUSINESS']}><BusinessValidate /></ProtectedRoute>} />
 
-        {/* Admin sayfaları */}
+        {/* Admin pages */}
         <Route path="/admin/dropoffs" element={<ProtectedRoute roles={['ADMIN']}><AdminDropOffs /></ProtectedRoute>} />
         <Route path="/admin/users" element={<ProtectedRoute roles={['ADMIN']}><AdminUsers /></ProtectedRoute>} />
         <Route path="/admin/complaints" element={<ProtectedRoute roles={['ADMIN']}><AdminComplaints /></ProtectedRoute>} />

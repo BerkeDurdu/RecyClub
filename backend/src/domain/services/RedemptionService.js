@@ -50,15 +50,19 @@ async function validateAtBusiness({ qrCode, businessUserId }) {
     const business = await Business.findOne({ where: { userId: businessUserId }, transaction: t });
     if (!business) throw new AppError('Business profile not found', 404);
 
+    // Lock only the redemption row; Postgres rejects FOR UPDATE combined with
+    // the LEFT OUTER JOIN that an `include` would generate, so fetch the reward
+    // separately instead of joining it into the locked query.
     const redemption = await Redemption.findOne({
       where: { qrCode },
-      include: [{ model: Reward, as: 'reward' }],
       transaction: t,
       lock: t.LOCK.UPDATE,
     });
     if (!redemption) throw new AppError('Invalid QR code', 404);
     if (redemption.status !== 'PENDING') throw new AppError(`Already ${redemption.status}`, 409);
-    if (redemption.reward.businessId !== business.id) {
+
+    const reward = await Reward.findByPk(redemption.rewardId, { transaction: t });
+    if (!reward || reward.businessId !== business.id) {
       throw new AppError('Redemption does not belong to this business', 403);
     }
 
@@ -66,7 +70,7 @@ async function validateAtBusiness({ qrCode, businessUserId }) {
     redemption.validatedAt = new Date();
     redemption.validatedByBusinessId = business.id;
     await redemption.save({ transaction: t });
-    return redemption;
+    return { ...redemption.toJSON(), reward };
   });
 }
 

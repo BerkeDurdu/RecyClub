@@ -8,6 +8,7 @@ async function register({ name, email, password, role = 'MEMBER', businessName, 
   if (!['MEMBER', 'BUSINESS'].includes(role)) {
     throw new AppError('Invalid role for self-registration', 400);
   }
+  email = String(email || '').trim().toLowerCase();
   const existing = await User.findOne({ where: { email } });
   if (existing) throw new AppError('Email already registered', 409);
 
@@ -29,6 +30,7 @@ async function register({ name, email, password, role = 'MEMBER', businessName, 
 }
 
 async function login({ email, password }) {
+  email = String(email || '').trim().toLowerCase();
   const user = await User.findOne({ where: { email } });
   if (!user) throw new AppError('Invalid credentials', 401);
   const ok = await bcrypt.compare(password, user.passwordHash);
